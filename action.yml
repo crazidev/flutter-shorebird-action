@@ -1,5 +1,7 @@
 name: "Flutter Build & Release Action"
-description: "A GitHub Action to build and release Flutter applications with Shorebird integration."
+description: >
+  This GitHub Action automates the build and release process for Flutter applications with Shorebird integration.
+  It supports creating Flutter releases and Shorebird releases, as well as applying Shorebird patches for both Android and iOS platforms.
 author: "crazidev"
 
 branding:
@@ -83,14 +85,17 @@ runs:
 
     - name: Install Dependencies
       run: flutter pub get
+      shell: bash
 
     - name: Conditional apk build
       if: ${{ inputs.FLUTTER_BUILD_APK == 'true' }}
       run: flutter build apk --release
+      shell: bash
 
     - name: Conditional aab build
       if: ${{ inputs.FLUTTER_BUILD_AAB == 'true' }}
       run: flutter build appbundle
+      shell: bash
 
     - name: Conditional Shorebird Patch Android Step
       if: ${{ inputs.SHOREBIRD_PATCH == 'true' && inputs.SHOREBIRD_PATCH_ANDROID == 'true' }}

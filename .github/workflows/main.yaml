@@ -23,7 +23,7 @@ jobs:
           SHOREBIRD_BUILD_IOS: false
           SHOREBIRD_BUILD_ANDROID: false
           SHOREBIRD_PATCH: true
-          SHOREBIRD_PATCH_RELEASE_VERSION: "1.0.0+4"
+          SHOREBIRD_PATCH_RELEASE_VERSION: "1.0.0+1"
           SHOREBIRD_PATCH_ANDROID: true
           SHOREBIRD_PATCH_IOS: false
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
