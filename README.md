@@ -1,6 +1,6 @@
 # Flutter & Shorebird Release
 
-Create a new release using the [Shorebird CLI](https://github.com/shorebirdtech/shorebird) for use in GitHub Actions.
+This GitHub Action automates the build and release process for Flutter applications with Shorebird integration. It supports creating Flutter releases and Shorebird releases, as well as applying Shorebird patches for both Android and iOS platforms.
 
 ## Features
 
@@ -11,10 +11,6 @@ Create a new release using the [Shorebird CLI](https://github.com/shorebirdtech/
 ✅ Create Shorebird Android/IOS patch
 
 ✅ Outputs the release version
-
-# Flutter Build & Release Action
-
-This GitHub Action automates the build and release process for Flutter applications with Shorebird integration.
 
 ## Inputs
 
