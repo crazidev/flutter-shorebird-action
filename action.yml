@@ -1,7 +1,5 @@
 name: "Flutter Build & Release Action"
-description: >
-  This GitHub Action automates the build and release process for Flutter applications with Shorebird integration.
-  It supports creating Flutter releases and Shorebird releases, as well as applying Shorebird patches for both Android and iOS platforms.
+description: "A GitHub Action to build and release Flutter applications with Shorebird integration."
 author: "crazidev"
 
 branding:
