@@ -1,0 +1,130 @@
+name: "Flutter Build & Release Action"
+description: "A GitHub Action to build and release Flutter applications with Shorebird integration."
+author: "crazidev"
+
+branding:
+  icon: package
+  color: green
+  
+inputs:
+  # Flutter Build Inputs
+  FLUTTER_VERSION:
+    description: "Version of Flutter to use"
+    required: true
+    default: "3.19.6"
+  FLUTTER_BUILD_APK:
+    description: "Set to true to build APK"
+    required: false
+    default: "false"
+  FLUTTER_BUILD_AAB:
+    description: "Set to true to build AAB"
+    required: false
+    default: "false"
+
+  # Shorebird Release Inputs
+  SHOREBIRD_RELEASE:
+    description: "Set to true to perform a Shorebird release"
+    required: false
+    default: "false"
+  SHOREBIRD_BUILD_IOS:
+    description: "Set to true to build Shorebird for iOS"
+    required: false
+    default: "false"
+  SHOREBIRD_BUILD_ANDROID:
+    description: "Set to true to build Shorebird for Android"
+    required: false
+    default: "false"
+
+  # Shorebird Patch Inputs
+  SHOREBIRD_PATCH:
+    description: "Set to true to apply Shorebird patch"
+    required: false
+    default: "true"
+  SHOREBIRD_PATCH_RELEASE_VERSION:
+    description: "Shorebird patch release version"
+    required: false
+    default: "1.0.0+4"
+  SHOREBIRD_PATCH_ANDROID:
+    description: "Set to true to apply Shorebird patch for Android"
+    required: false
+    default: "true"
+  SHOREBIRD_PATCH_IOS:
+    description: "Set to true to apply Shorebird patch for iOS"
+    required: false
+    default: "false"
+
+  # Tokens
+  SHOREBIRD_TOKEN:
+    description: "Shorebird token"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set Up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: "oracle"
+        java-version: "17"
+
+    - name: Set Up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ inputs.FLUTTER_VERSION }}
+        channel: "stable"
+        cache: true
+  
+    - name: Shorebird setup
+      if: ${{ inputs.SHOREBIRD_RELEASE == 'true' || inputs.SHOREBIRD_PATCH == 'true' }}
+      uses: shorebirdtech/setup-shorebird@v1
+
+    - name: Install Dependencies
+      run: flutter pub get
+
+    - name: Conditional apk build
+      if: ${{ inputs.FLUTTER_BUILD_APK == 'true' }}
+      run: flutter build apk --release
+
+    - name: Conditional aab build
+      if: ${{ inputs.FLUTTER_BUILD_AAB == 'true' }}
+      run: flutter build appbundle
+
+    - name: Conditional Shorebird Patch Android Step
+      if: ${{ inputs.SHOREBIRD_PATCH == 'true' && inputs.SHOREBIRD_PATCH_ANDROID == 'true' }}
+      uses: shorebirdtech/shorebird-patch@v0
+      with:
+        platform: android
+        args: "--release-version=${{ inputs.SHOREBIRD_PATCH_RELEASE_VERSION }} --allow-native-diffs --allow-asset-diffs"
+
+    - name: Conditional Shorebird Patch IOS Step
+      if: ${{ inputs.SHOREBIRD_PATCH == 'true' && inputs.SHOREBIRD_PATCH_IOS == 'true' }}
+      uses: shorebirdtech/shorebird-patch@v0
+      with:
+        platform: ios
+        args: "--release-version=${{ inputs.SHOREBIRD_PATCH_RELEASE_VERSION }} --allow-native-diffs --allow-asset-diffs"
+
+    - name: 🚀 Shorebird Release Android
+      if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_ANDROID == 'true' }}
+      uses: shorebirdtech/shorebird-release@v0
+      with:
+        platform: android
+        args: "--flutter-version=${{ inputs.FLUTTER_VERSION }}"
+
+    - name: 🚀 Shorebird Release IOS
+      if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_IOS == 'true'}}
+      uses: shorebirdtech/shorebird-patch@v0
+      with:
+        platform: ios
+        args: "--flutter-version=${{ inputs.FLUTTER_VERSION }}"
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Releases
+        if-no-files-found: ignore
+        path: |
+          build/app/outputs/flutter-apk/
+          build/app/outputs/bundle/release/
