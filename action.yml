@@ -58,10 +58,13 @@ inputs:
     description: "Shorebird token"
     required: true
     
-  ANDROID_SIGNING_PRIVATE_PEM:
-    description: "Use the android private key for Apk Signing"
+  APK_SIGNING_PRIVATE_KEY:
+    description: "This is the private key used for signing the APK file. It should be provided in PKCS #8 format (.p8)."
     required: false
-    default: ""
+
+  APK_SIGNING_CERT:
+    description: "This is the certificate associated with the private key used for signing the APK."
+    required: false
 
 runs:
   using: "composite"
@@ -91,9 +94,11 @@ runs:
       run: flutter pub get
       shell: bash
 
-    - name: Write android private key to file
-      if: ${{ inputs.PRIVATE_KEY_PATH != '' }}
-      run: echo "${{ inputs.ANDROID_SIGNING_PRIVATE_PEM }}" > private_key.pem
+    - name: Write android private key & certificate to file
+      if: ${{ inputs.APK_SIGNING_PRIVATE_KEY && inputs.APK_SIGNING_CERT }}
+      run: |
+        echo "${{ inputs.APK_SIGNING_PRIVATE_KEY }}" > private_key.pem
+        echo "${{ inputs.APK_SIGNING_CERT }}" > signing_cert.cer
       shell: bash
 
     - name: Conditional apk build
@@ -102,6 +107,7 @@ runs:
       shell: bash
       env:
         PRIVATE_KEY_PATH: ${{ github.workspace }}/private_key.pem
+        SIGNING_CERT_PATH: ${{ github.workspace }}/signing_cert.cer
 
     - name: Conditional aab build
       if: ${{ inputs.FLUTTER_BUILD_AAB == 'true' }}
@@ -109,6 +115,7 @@ runs:
       shell: bash
       env:
         PRIVATE_KEY_PATH: ${{ github.workspace }}/private_key.pem
+        SIGNING_CERT_PATH: ${{ github.workspace }}/signing_cert.cer
 
     - name: Conditional Shorebird Patch Android Step
       if: ${{ inputs.SHOREBIRD_PATCH == 'true' && inputs.SHOREBIRD_PATCH_ANDROID == 'true' }}
@@ -129,6 +136,7 @@ runs:
       uses: shorebirdtech/shorebird-release@v0
       env:
         PRIVATE_KEY_PATH: ${{ github.workspace }}/private_key.pem
+        SIGNING_CERT_PATH: ${{ github.workspace }}/signing_cert.cer
       with:
         platform: android
         args: "--flutter-version=${{ inputs.FLUTTER_VERSION }}"
