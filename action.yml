@@ -61,6 +61,7 @@ inputs:
   ANDROID_SIGNING_PRIVATE_PEM:
     description: "Use the android private key for Apk Signing"
     required: false
+    default: ""
 
 runs:
   using: "composite"
@@ -89,14 +90,22 @@ runs:
       run: flutter pub get
       shell: bash
 
+    - name: Write android private key to file
+      if: ${{ inputs.PRIVATE_KEY_PATH != '' }}
+      run: echo "${{ inputs.ANDROID_SIGNING_PRIVATE_PEM }}" > private_key.pem
+
     - name: Conditional apk build
       if: ${{ inputs.FLUTTER_BUILD_APK == 'true' }}
       run: flutter build apk --release
+      env:
+        PRIVATE_KEY_PATH: ${{ github.workspace }}/private_key.pem
       shell: bash
 
     - name: Conditional aab build
       if: ${{ inputs.FLUTTER_BUILD_AAB == 'true' }}
       run: flutter build appbundle
+      env:
+        PRIVATE_KEY_PATH: ${{ github.workspace }}/private_key.pem
       shell: bash
 
     - name: Conditional Shorebird Patch Android Step
@@ -116,6 +125,8 @@ runs:
     - name: 🚀 Shorebird Release Android
       if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_ANDROID == 'true' }}
       uses: shorebirdtech/shorebird-release@v0
+      env:
+        PRIVATE_KEY_PATH: ${{ github.workspace }}/private_key.pem
       with:
         platform: android
         args: "--flutter-version=${{ inputs.FLUTTER_VERSION }}"
