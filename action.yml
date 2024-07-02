@@ -73,6 +73,7 @@ runs:
       uses: actions/setup-java@v4
       with:
         distribution: "oracle"
+        cache: 'gradle'
         java-version: "17"
 
     - name: Set Up Flutter
