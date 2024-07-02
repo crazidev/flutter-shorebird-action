@@ -57,6 +57,10 @@ inputs:
   SHOREBIRD_TOKEN:
     description: "Shorebird token"
     required: true
+    
+  ANDROID_SIGNING_PRIVATE_PEM:
+    description: "Use the android private key for Apk Signing"
+    required: false
 
 runs:
   using: "composite"
