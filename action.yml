@@ -77,6 +77,7 @@ runs:
 
     - name: Set Up Flutter
       uses: subosito/flutter-action@v2
+      shell: bash
       with:
         flutter-version: ${{ inputs.FLUTTER_VERSION }}
         channel: "stable"
@@ -85,6 +86,7 @@ runs:
     - name: Shorebird setup
       if: ${{ inputs.SHOREBIRD_RELEASE == 'true' || inputs.SHOREBIRD_PATCH == 'true' }}
       uses: shorebirdtech/setup-shorebird@v1
+      shell: bash
 
     - name: Install Dependencies
       run: flutter pub get
@@ -93,24 +95,26 @@ runs:
     - name: Write android private key to file
       if: ${{ inputs.PRIVATE_KEY_PATH != '' }}
       run: echo "${{ inputs.ANDROID_SIGNING_PRIVATE_PEM }}" > private_key.pem
+      shell: bash
 
     - name: Conditional apk build
       if: ${{ inputs.FLUTTER_BUILD_APK == 'true' }}
       run: flutter build apk --release
+      shell: bash
       env:
         PRIVATE_KEY_PATH: ${{ github.workspace }}/private_key.pem
-      shell: bash
 
     - name: Conditional aab build
       if: ${{ inputs.FLUTTER_BUILD_AAB == 'true' }}
       run: flutter build appbundle
+      shell: bash
       env:
         PRIVATE_KEY_PATH: ${{ github.workspace }}/private_key.pem
-      shell: bash
 
     - name: Conditional Shorebird Patch Android Step
       if: ${{ inputs.SHOREBIRD_PATCH == 'true' && inputs.SHOREBIRD_PATCH_ANDROID == 'true' }}
       uses: shorebirdtech/shorebird-patch@v0
+      shell: bash
       with:
         platform: android
         args: "--release-version=${{ inputs.SHOREBIRD_PATCH_RELEASE_VERSION }} --allow-native-diffs --allow-asset-diffs"
@@ -118,6 +122,7 @@ runs:
     - name: Conditional Shorebird Patch IOS Step
       if: ${{ inputs.SHOREBIRD_PATCH == 'true' && inputs.SHOREBIRD_PATCH_IOS == 'true' }}
       uses: shorebirdtech/shorebird-patch@v0
+      shell: bash
       with:
         platform: ios
         args: "--release-version=${{ inputs.SHOREBIRD_PATCH_RELEASE_VERSION }} --allow-native-diffs --allow-asset-diffs"
@@ -125,6 +130,7 @@ runs:
     - name: 🚀 Shorebird Release Android
       if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_ANDROID == 'true' }}
       uses: shorebirdtech/shorebird-release@v0
+      shell: bash
       env:
         PRIVATE_KEY_PATH: ${{ github.workspace }}/private_key.pem
       with:
@@ -134,6 +140,7 @@ runs:
     - name: 🚀 Shorebird Release IOS
       if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_IOS == 'true'}}
       uses: shorebirdtech/shorebird-patch@v0
+      shell: bash
       with:
         platform: ios
         args: "--flutter-version=${{ inputs.FLUTTER_VERSION }}"
