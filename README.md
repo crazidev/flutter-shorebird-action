@@ -37,6 +37,10 @@ This GitHub Action automates the build and release process for Flutter applicati
 
 - `SHOREBIRD_TOKEN`: Shorebird token. Required.
 
+### Android Signing
+
+- `ANDROID_SIGNING_PRIVATE_PEM` Set a private key to be used for signing instead of using keystore/keypair, for security reasons you're advice to store your private key securely on github action secret
+
 ## Example Usage
 
 ```yaml
@@ -73,3 +77,5 @@ jobs:
           SHOREBIRD_PATCH_ANDROID: true
           SHOREBIRD_PATCH_IOS: false
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+
+          ANDROID_SIGNING_PRIVATE_PEM: ${{ secrets.ANDROID_SIGNING_PRIVATE_PEM }}
