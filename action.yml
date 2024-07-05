@@ -58,12 +58,20 @@ inputs:
     description: "Shorebird token"
     required: true
     
-  APK_SIGNING_PRIVATE_KEY:
-    description: "This is the private key used for signing the APK file. It should be provided in PKCS #8 format (.p8)."
+  ANDROID_KEYSTORE_BASE64:
+    description: "Base64 encoded Android keystore file"
     required: false
 
-  APK_SIGNING_CERT:
-    description: "This is the certificate associated with the private key used for signing the APK."
+  ANDROID_KEYSTORE_PASSWORD:
+    description: "Password for Android keystore"
+    required: false
+
+  ANDROID_KEY_ALIAS:
+    description: "Alias for Android key"
+    required: false
+
+  ANDROID_KEY_PASSWORD:
+    description: "Password for Android key"
     required: false
 
 runs:
@@ -94,11 +102,18 @@ runs:
       run: flutter pub get
       shell: bash
 
-    - name: Write android private key & certificate to file
-      if: ${{ inputs.APK_SIGNING_PRIVATE_KEY && inputs.APK_SIGNING_CERT }}
+    - name: Decode Keystore
+      if: ${{ inputs.ANDROID_KEYSTORE_BASE64 }}
+      run: echo "${{ inputs.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > $HOME/keystore.jks
+      shell: bash
+
+    - name: Update key.properties
+      if: ${{ inputs.ANDROID_KEYSTORE_BASE64 }}
       run: |
-        echo "${{ inputs.APK_SIGNING_PRIVATE_KEY }}" > private_key.pem
-        echo "${{ inputs.APK_SIGNING_CERT }}" > signing_cert.cer
+        echo "storePassword=${{ inputs.ANDROID_KEYSTORE_PASSWORD }}" >> android/key.properties
+        echo "keyPassword=${{ inputs.ANDROID_KEY_PASSWORD }}" >> android/key.properties
+        echo "keyAlias=${{ inputs.ANDROID_KEY_ALIAS }}" >> android/key.properties
+        echo "storeFile=$HOME/keystore.jks" >> android/key.properties
       shell: bash
 
     - name: Conditional apk build
