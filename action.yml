@@ -127,6 +127,8 @@ runs:
     - name: Conditional Shorebird Patch Android Step
       if: ${{ inputs.SHOREBIRD_PATCH == 'true' && inputs.SHOREBIRD_PATCH_ANDROID == 'true' }}
       uses: shorebirdtech/shorebird-patch@v0
+      env:
+        SHOREBIRD_TOKEN: ${{ inputs.SHOREBIRD_TOKEN }}
       with:
         platform: android
         args: "--release-version=${{ inputs.SHOREBIRD_PATCH_RELEASE_VERSION }} --allow-native-diffs --allow-asset-diffs"
@@ -134,6 +136,8 @@ runs:
     - name: Conditional Shorebird Patch IOS Step
       if: ${{ inputs.SHOREBIRD_PATCH == 'true' && inputs.SHOREBIRD_PATCH_IOS == 'true' }}
       uses: shorebirdtech/shorebird-patch@v0
+      env:
+        SHOREBIRD_TOKEN: ${{ inputs.SHOREBIRD_TOKEN }}
       with:
         platform: ios
         args: "--release-version=${{ inputs.SHOREBIRD_PATCH_RELEASE_VERSION }} --allow-native-diffs --allow-asset-diffs"
@@ -141,6 +145,8 @@ runs:
     - name: 🚀 Shorebird Release Android
       if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_ANDROID == 'true' }}
       uses: shorebirdtech/shorebird-release@v0
+      env:
+        SHOREBIRD_TOKEN: ${{ inputs.SHOREBIRD_TOKEN }}
       with:
         platform: android
         args: "--flutter-version=${{ inputs.FLUTTER_VERSION }}"
@@ -148,6 +154,8 @@ runs:
     - name: 🚀 Shorebird Release IOS
       if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_IOS == 'true'}}
       uses: shorebirdtech/shorebird-patch@v0
+      env:
+        SHOREBIRD_TOKEN: ${{ inputs.SHOREBIRD_TOKEN }}
       with:
         platform: ios
         args: "--flutter-version=${{ inputs.FLUTTER_VERSION }}"
