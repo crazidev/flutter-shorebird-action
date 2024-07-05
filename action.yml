@@ -52,24 +52,22 @@ inputs:
     description: "Set to true to apply Shorebird patch for iOS"
     required: false
     default: "false"
-
-  # Tokens
+    
   SHOREBIRD_TOKEN:
     description: "Shorebird token"
     required: true
-    
+
+  
+  # Android Signing  
   ANDROID_KEYSTORE_BASE64:
     description: "Base64 encoded Android keystore file"
     required: false
-
   ANDROID_KEYSTORE_PASSWORD:
     description: "Password for Android keystore"
     required: false
-
   ANDROID_KEY_ALIAS:
     description: "Alias for Android key"
     required: false
-
   ANDROID_KEY_PASSWORD:
     description: "Password for Android key"
     required: false
@@ -120,17 +118,11 @@ runs:
       if: ${{ inputs.FLUTTER_BUILD_APK == 'true' }}
       run: flutter build apk --release
       shell: bash
-      env:
-        PRIVATE_KEY_PATH: ${{ github.workspace }}/private_key.pem
-        SIGNING_CERT_PATH: ${{ github.workspace }}/signing_cert.cer
 
     - name: Conditional aab build
       if: ${{ inputs.FLUTTER_BUILD_AAB == 'true' }}
       run: flutter build appbundle
       shell: bash
-      env:
-        PRIVATE_KEY_PATH: ${{ github.workspace }}/private_key.pem
-        SIGNING_CERT_PATH: ${{ github.workspace }}/signing_cert.cer
 
     - name: Conditional Shorebird Patch Android Step
       if: ${{ inputs.SHOREBIRD_PATCH == 'true' && inputs.SHOREBIRD_PATCH_ANDROID == 'true' }}
@@ -149,9 +141,6 @@ runs:
     - name: 🚀 Shorebird Release Android
       if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_ANDROID == 'true' }}
       uses: shorebirdtech/shorebird-release@v0
-      env:
-        PRIVATE_KEY_PATH: ${{ github.workspace }}/private_key.pem
-        SIGNING_CERT_PATH: ${{ github.workspace }}/signing_cert.cer
       with:
         platform: android
         args: "--flutter-version=${{ inputs.FLUTTER_VERSION }}"
