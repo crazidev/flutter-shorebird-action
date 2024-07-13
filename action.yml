@@ -26,6 +26,10 @@ inputs:
     description: "Set to true to perform a Shorebird release"
     required: false
     default: "false"
+  SHOREBIRD_EXTRA_ARGS:
+    description: "Set to an additional arguments to pass to Shorebird CLi"
+    required: false
+    default: ""
   SHOREBIRD_BUILD_IOS:
     description: "Set to true to build Shorebird for iOS"
     required: false
@@ -56,6 +60,7 @@ inputs:
   SHOREBIRD_TOKEN:
     description: "Shorebird token"
     required: true
+    
 
   
   # Android Signing  
@@ -131,7 +136,7 @@ runs:
         SHOREBIRD_TOKEN: ${{ inputs.SHOREBIRD_TOKEN }}
       with:
         platform: android
-        args: "--release-version=${{ inputs.SHOREBIRD_PATCH_RELEASE_VERSION }} --allow-native-diffs --allow-asset-diffs"
+        args: "--release-version=${{ inputs.SHOREBIRD_PATCH_RELEASE_VERSION }} --allow-native-diffs --allow-asset-diffs ${{ inputs.SHOREBIRD_EXTRA_ARGS }}"
 
     - name: Conditional Shorebird Patch IOS Step
       if: ${{ inputs.SHOREBIRD_PATCH == 'true' && inputs.SHOREBIRD_PATCH_IOS == 'true' }}
@@ -140,7 +145,7 @@ runs:
         SHOREBIRD_TOKEN: ${{ inputs.SHOREBIRD_TOKEN }}
       with:
         platform: ios
-        args: "--release-version=${{ inputs.SHOREBIRD_PATCH_RELEASE_VERSION }} --allow-native-diffs --allow-asset-diffs"
+        args: "--release-version=${{ inputs.SHOREBIRD_PATCH_RELEASE_VERSION }} --allow-native-diffs --allow-asset-diffs ${{ inputs.SHOREBIRD_EXTRA_ARGS }}"
 
     - name: 🚀 Shorebird Release Android
       if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_ANDROID == 'true' }}
@@ -149,7 +154,7 @@ runs:
         SHOREBIRD_TOKEN: ${{ inputs.SHOREBIRD_TOKEN }}
       with:
         platform: android
-        args: "--flutter-version=${{ inputs.FLUTTER_VERSION }}"
+        args: "--flutter-version=${{ inputs.FLUTTER_VERSION }} ${{ inputs.SHOREBIRD_EXTRA_ARGS }}"
 
     - name: 🚀 Shorebird Release IOS
       if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_IOS == 'true'}}
@@ -158,7 +163,7 @@ runs:
         SHOREBIRD_TOKEN: ${{ inputs.SHOREBIRD_TOKEN }}
       with:
         platform: ios
-        args: "--flutter-version=${{ inputs.FLUTTER_VERSION }}"
+        args: "--flutter-version=${{ inputs.FLUTTER_VERSION }} ${{ inputs.SHOREBIRD_EXTRA_ARGS }}"
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
