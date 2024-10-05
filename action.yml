@@ -51,7 +51,7 @@ inputs:
   SHOREBIRD_PATCH:
     description: "Set to true to apply Shorebird patch"
     required: false
-    default: "true"
+    default: "false"
   SHOREBIRD_PATCH_RELEASE_VERSION:
     description: "Shorebird patch release version"
     required: false
@@ -59,7 +59,7 @@ inputs:
   SHOREBIRD_PATCH_ANDROID:
     description: "Set to true to apply Shorebird patch for Android"
     required: false
-    default: "true"
+    default: "false"
   SHOREBIRD_PATCH_IOS:
     description: "Set to true to apply Shorebird patch for iOS"
     required: false
