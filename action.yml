@@ -1,4 +1,4 @@
-name: "Flutter Build & Release Action"
+name: "Flutter & Shorebird Release GitHub Action"
 description: "A GitHub Action to build and release Flutter applications with Shorebird integration."
 author: "crazidev"
 
