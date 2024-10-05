@@ -92,6 +92,7 @@ runs:
       uses: actions/checkout@v4
 
     - name: Set Up Java
+      if: ${{ inputs.FLUTTER_BUILD_APK == 'true' || inputs.FLUTTER_BUILD_AAB == 'true' || inputs.SHOREBIRD_BUILD_ANDROID == 'true' || inputs.SHOREBIRD_RELEASE == 'true' || inputs.SHOREBIRD_PATCH == 'true' }}
       uses: actions/setup-java@v4
       with:
         distribution: "oracle"
@@ -99,6 +100,7 @@ runs:
         java-version: "17"
 
     - name: Set Up Flutter
+      if: ${{ inputs.FLUTTER_BUILD_APK == 'true' || inputs.FLUTTER_BUILD_AAB == 'true' || inputs.FLUTTER_BUILD_WEB == 'true' || inputs.SHOREBIRD_RELEASE == 'true' || inputs.SHOREBIRD_PATCH == 'true' }}
       uses: subosito/flutter-action@v2
       with:
         flutter-version: ${{ inputs.FLUTTER_VERSION }}
@@ -110,16 +112,17 @@ runs:
       uses: shorebirdtech/setup-shorebird@v1
 
     - name: Install Dependencies
+      if: ${{ inputs.FLUTTER_BUILD_APK == 'true' || inputs.FLUTTER_BUILD_AAB == 'true' || inputs.FLUTTER_BUILD_WEB == 'true' || inputs.SHOREBIRD_RELEASE == 'true' || inputs.SHOREBIRD_PATCH == 'true' }}
       run: flutter pub get
       shell: bash
 
     - name: Decode Keystore
-      if: ${{ inputs.ANDROID_KEYSTORE_BASE64 }}
+      if: ${{ inputs.ANDROID_KEYSTORE_BASE64 && (inputs.FLUTTER_BUILD_APK == 'true' || inputs.FLUTTER_BUILD_AAB == 'true' || inputs.SHOREBIRD_BUILD_ANDROID == 'true') }}
       run: echo "${{ inputs.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > $HOME/keystore.jks
       shell: bash
 
     - name: Update key.properties
-      if: ${{ inputs.ANDROID_KEYSTORE_BASE64 }}
+      if: ${{ inputs.ANDROID_KEYSTORE_BASE64 && (inputs.FLUTTER_BUILD_APK == 'true' || inputs.FLUTTER_BUILD_AAB == 'true' || inputs.SHOREBIRD_BUILD_ANDROID == 'true') }}
       run: |
         echo "storePassword=${{ inputs.ANDROID_KEYSTORE_PASSWORD }}" >> android/key.properties
         echo "keyPassword=${{ inputs.ANDROID_KEY_PASSWORD }}" >> android/key.properties
@@ -170,8 +173,8 @@ runs:
         args: "--flutter-version=${{ inputs.FLUTTER_VERSION }} ${{ inputs.SHOREBIRD_EXTRA_ARGS }}"
 
     - name: 🚀 Shorebird Release IOS
-      if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_IOS == 'true'}}
-      uses: shorebirdtech/shorebird-patch@v0
+      if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_IOS == 'true' }}
+      uses: shorebirdtech/shorebird-release@v0
       env:
         SHOREBIRD_TOKEN: ${{ inputs.SHOREBIRD_TOKEN }}
       with:
@@ -179,6 +182,7 @@ runs:
         args: "--flutter-version=${{ inputs.FLUTTER_VERSION }} ${{ inputs.SHOREBIRD_EXTRA_ARGS }}"
 
     - name: Upload Artifacts
+      if: ${{ inputs.FLUTTER_BUILD_APK == 'true' || inputs.FLUTTER_BUILD_AAB == 'true' || inputs.FLUTTER_BUILD_WEB == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: Releases
