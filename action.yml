@@ -20,6 +20,14 @@ inputs:
     description: "Set to true to build AAB"
     required: false
     default: "false"
+  FLUTTER_BUILD_WEB:
+    description: "Set to true to build for web"
+    required: false
+    default: "false"
+  FLUTTER_EXTRA_ARGS:
+    description: "Set to an additional arguments to pass to Flutter Build Command"
+    required: false
+    default: ""
 
   # Shorebird Release Inputs
   SHOREBIRD_RELEASE:
@@ -59,7 +67,7 @@ inputs:
     
   SHOREBIRD_TOKEN:
     description: "Shorebird token"
-    required: true
+    required: false
     
 
   
@@ -121,12 +129,17 @@ runs:
 
     - name: Conditional apk build
       if: ${{ inputs.FLUTTER_BUILD_APK == 'true' }}
-      run: flutter build apk --release
+      run: flutter build apk --release ${{ inputs.FLUTTER_EXTRA_ARGS }}
       shell: bash
 
     - name: Conditional aab build
       if: ${{ inputs.FLUTTER_BUILD_AAB == 'true' }}
-      run: flutter build appbundle
+      run: flutter build appbundle ${{ inputs.FLUTTER_EXTRA_ARGS }}
+      shell: bash
+
+    - name: Conditional web build
+      if: ${{ inputs.FLUTTER_BUILD_WEB == 'true' }}
+      run: flutter build web ${{ inputs.FLUTTER_EXTRA_ARGS }}
       shell: bash
 
     - name: Conditional Shorebird Patch Android Step
@@ -173,3 +186,4 @@ runs:
         path: |
           build/app/outputs/flutter-apk/
           build/app/outputs/bundle/release/
+          build/web/
