@@ -108,7 +108,7 @@ runs:
       uses: subosito/flutter-action@v2
       with:
         flutter-version: ${{ inputs.FLUTTER_VERSION }}
-        channel: ${{ inpts.FLUTTER_CHANNEL }}
+        channel: ${{ inputs.FLUTTER_CHANNEL }}
         cache: true
   
     - name: Shorebird setup
