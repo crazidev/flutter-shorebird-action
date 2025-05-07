@@ -11,7 +11,11 @@ inputs:
   FLUTTER_VERSION:
     description: "Version of Flutter to use"
     required: true
-    default: "3.19.6"
+    default: "3.29.3"
+  FLUTTER_CHANNEL:
+    description: "stable | main | beta: default is stable"
+    required: true
+    default: "stable"
   FLUTTER_BUILD_APK:
     description: "Set to true to build APK"
     required: false
@@ -104,7 +108,7 @@ runs:
       uses: subosito/flutter-action@v2
       with:
         flutter-version: ${{ inputs.FLUTTER_VERSION }}
-        channel: "stable"
+        channel: ${{ inpts.FLUTTER_CHANNEL }}
         cache: true
   
     - name: Shorebird setup
