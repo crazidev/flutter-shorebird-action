@@ -147,7 +147,7 @@ runs:
 
     - name: Conditional Shorebird Patch Android Step
       if: ${{ inputs.SHOREBIRD_PATCH == 'true' && inputs.SHOREBIRD_PATCH_ANDROID == 'true' }}
-      uses: shorebirdtech/shorebird-patch@v0
+      uses: shorebirdtech/shorebird-patch@v1
       env:
         SHOREBIRD_TOKEN: ${{ inputs.SHOREBIRD_TOKEN }}
       with:
@@ -156,7 +156,7 @@ runs:
 
     - name: Conditional Shorebird Patch IOS Step
       if: ${{ inputs.SHOREBIRD_PATCH == 'true' && inputs.SHOREBIRD_PATCH_IOS == 'true' }}
-      uses: shorebirdtech/shorebird-patch@v0
+      uses: shorebirdtech/shorebird-patch@v1
       env:
         SHOREBIRD_TOKEN: ${{ inputs.SHOREBIRD_TOKEN }}
       with:
@@ -165,7 +165,7 @@ runs:
 
     - name: 🚀 Shorebird Release Android
       if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_ANDROID == 'true' }}
-      uses: shorebirdtech/shorebird-release@v0
+      uses: shorebirdtech/shorebird-release@v1
       env:
         SHOREBIRD_TOKEN: ${{ inputs.SHOREBIRD_TOKEN }}
       with:
@@ -174,7 +174,7 @@ runs:
 
     - name: 🚀 Shorebird Release IOS
       if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_IOS == 'true' }}
-      uses: shorebirdtech/shorebird-release@v0
+      uses: shorebirdtech/shorebird-release@v1
       env:
         SHOREBIRD_TOKEN: ${{ inputs.SHOREBIRD_TOKEN }}
       with:
