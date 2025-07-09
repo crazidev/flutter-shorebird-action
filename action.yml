@@ -11,7 +11,7 @@ inputs:
   FLUTTER_VERSION:
     description: "Version of Flutter to use"
     required: true
-    default: "3.29.3"
+    default: "3.32.0"
   FLUTTER_CHANNEL:
     description: "stable | main | beta: default is stable"
     required: true
@@ -174,7 +174,8 @@ runs:
         SHOREBIRD_TOKEN: ${{ inputs.SHOREBIRD_TOKEN }}
       with:
         platform: android
-        args: "--flutter-version=${{ inputs.FLUTTER_VERSION }} ${{ inputs.SHOREBIRD_EXTRA_ARGS }}"
+        flutter-version: ${{ inputs.FLUTTER_VERSION }}
+        args: " ${{ inputs.SHOREBIRD_EXTRA_ARGS }}"
 
     - name: 🚀 Shorebird Release IOS
       if: ${{ inputs.SHOREBIRD_RELEASE == 'true' && inputs.SHOREBIRD_BUILD_IOS == 'true' }}
