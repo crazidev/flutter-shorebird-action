@@ -186,7 +186,6 @@ runs:
         args: "--flutter-version=${{ inputs.FLUTTER_VERSION }} ${{ inputs.SHOREBIRD_EXTRA_ARGS }}"
 
     - name: Upload Artifacts
-      if: ${{ inputs.FLUTTER_BUILD_APK == 'true' || inputs.FLUTTER_BUILD_AAB == 'true' || inputs.FLUTTER_BUILD_WEB == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: Releases
