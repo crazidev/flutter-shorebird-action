@@ -93,11 +93,11 @@ runs:
   using: "composite"
   steps:
     - name: Checkout Repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Set Up Java
       if: ${{ inputs.FLUTTER_BUILD_APK == 'true' || inputs.FLUTTER_BUILD_AAB == 'true' || inputs.SHOREBIRD_BUILD_ANDROID == 'true' || inputs.SHOREBIRD_RELEASE == 'true' || inputs.SHOREBIRD_PATCH == 'true' }}
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         distribution: "oracle"
         cache: 'gradle'
